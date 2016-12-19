@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Discord;
 
@@ -11,17 +12,17 @@ namespace GithubCS
 	class Program
 	{
 		private DiscordClient _client;
-
+		Regex checkRegex = new Regex(@"^#\d+$");
 		static void Main(string[] args)
 		{
-			new Program().mainBot();
+			new Program().MainBot();
 			while (Console.ReadLine() == "")
 			{
 				
 			}
 		}
 
-		private async void mainBot()
+		private async void MainBot()
 		{
 			_client = new DiscordClient();
 			_client.MessageReceived += async (s, e) =>
@@ -30,7 +31,7 @@ namespace GithubCS
 				var wordArray = e.Message.RawText.Split(' ');
 				foreach (var word in wordArray)
 				{
-					if (word.StartsWith("#"))
+					if (checkRegex.Match(word).Success)
 					{
 						string number = word.Replace("#", "");
 						await e.Channel.SendMessage("https://github.com/HearthSim/Hearthstone-Deck-Tracker/pull/" + number);
